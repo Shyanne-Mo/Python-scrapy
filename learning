@@ -5,4 +5,4 @@ response = urllib.request.urlopen(req)
 html = response.read()
 
 with open('HomepageCode','wb') as f:
-    f.write(html)
+    f.write(html) 
