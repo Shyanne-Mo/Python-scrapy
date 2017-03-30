@@ -1,0 +1,8 @@
+import urllib.request
+
+url = "http://www.placekitten.com/500/600"   #要爬取的猫的地址
+req = urllib.request.Request(url)            #返回一个request对象
+response = urllib.request.urlopen(req)       #在urlopen参数中输入该request对象
+cat_img = response.read()                    #read读出
+with open('cat.jpg','wb') as f:              #用with（该方法不用写在结尾写.close()） 将图片以jpg格式保存
+    f.write(cat_img)
