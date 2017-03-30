@@ -1,0 +1,20 @@
+import urllib.request
+import easygui as g     #引入easygui函数
+import os               #引入os函数 
+
+inf = g.multenterbox(msg = '请填写喵的尺寸',title = '下载一只喵',fields = ('宽：','高：'),values = ('400','600')) 
+#该函数可出现输入框让用户输入自己想要的宽和高，默认值为400和600.
+
+string = 'http://placekitten.com/g/' + inf[0] + '/' + inf[1]
+#因为网址的后面参数的不同会出现不同的猫的图片，所以将用户输入的值加到后面。
+
+addr = g.diropenbox(msg='请选择存放喵的文件夹：')  #用diropenbox函数让用户可以选择存入的路径
+name = g.enterbox('请输入保存的文件名：')          #用enterbox函数让用户在输入框内输入保存的文件名
+os.chdir(addr)                                  #用chdir函数将保存路径切换到用户选择的文件处
+
+req = urllib.request.Request(string)            
+response = urllib.request.urlopen(req)
+cat_img = response.read()
+
+with open( name + '.jpg','wb') as f:
+    f.write(cat_img)
