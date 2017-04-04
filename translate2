@@ -1,0 +1,38 @@
+import urllib.request
+import urllib.parse         
+import json             
+import time
+
+while True:
+    content = input('请输入需要翻译的内容(输入q!退出程序)：')
+    if content =='q!':          #设置退出标志
+        break
+
+    url='http://fy.iciba.com/ajax.php?a=fy'
+    
+    head = {}
+    head['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36'
+
+    data = {}                   
+    data['f'] = 'auto'
+    data['t'] = 'auto'        
+    data['w'] = content
+
+    data = urllib.parse.urlencode(data).encode('utf-8')           
+
+    req = urllib.request.Request(url,data,head)                  #第二种形式，直接加上head参数
+    
+    
+    response = urllib.request.urlopen(req)
+    html = response.read().decode('utf-8')                        
+    try:
+        target = json.loads(html)                #输入句子或中文时               
+        target = target['content']['out']
+        print(target)
+    except KeyError:
+    #此处因为单独输入一个单词和其他的输入得到的输出字典格式不一样，所以将KeyError转为另一种形式
+        target = json.loads(html)               #输入单独的单词时
+        target = target['content']['word_mean']     
+        print(target)
+        
+    time.sleep(5)   
