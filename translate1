@@ -1,0 +1,39 @@
+import urllib.request
+import urllib.parse         #导入parse模块
+import json                 #导入json模块
+import time
+
+while True:
+    content = input('请输入需要翻译的内容(输入q!退出程序)：')
+    if content =='q!':          #设置退出标志
+        break
+
+    url='http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=dict2.index'
+    '''
+    head = {}
+    head['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
+    '''
+    data = {}                   #data为一个字典
+    data['type']= 'AUTO'
+    data['i'] = content         #用户填入的需要翻译的内容
+    data['doctype'] = 'json'    #json格式
+    data['xmlVersion'] = '1.8'
+    data['keyfrom'] = 'fanyi.web'
+    data['ue'] = 'UTF-8'        #编码形式，对unicode的一种编码形式
+    data['action'] = 'FY_BY_CLICKBUTTON'
+    data['typoResult'] = 'true'
+    data = urllib.parse.urlencode(data).encode('utf-8')     #硬编码为utf-8的形式，Python默认为unicode形式
+
+    req = urllib.request.Request(url,data)                  #注意两种方式参数head有变化
+    req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')
+    #上一句为req函数生成之后将user-agent再加入进去
+    
+    response = urllib.request.urlopen(req)
+    html = response.read().decode('utf-8')                  #read之后为utf-8形式，decode把utf-8解码为unicode形式
+
+    target = json.loads(html)                               #导入json
+    target = target['translateResult'][0][0]['tgt']         #将翻译后的内容取出
+
+    print(target)
+    time.sleep(5)   #此处增加一个延时，防止访问服务器频率过快
+
